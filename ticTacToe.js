@@ -49,24 +49,87 @@ const gameboard = (() => {
 
     const gameOver = () => {
         console.log("Game Over. No Winners.")
+        turns = 0;
     };
 
     const win = (winner) => {
         console.log(winner + " is the winner!")
+        turns = 0;
     };
 
-    const addMark = (row, col, marker, player) => {
-        board[row][col] = marker;
+    const displayBoard = () => {
+        let out = ""
+        for(row of board){
+            for(col of row){
+                out += col + " ";
+            }
+            console.log(out);
+            out = "";
+        }
+    }
+
+    const verifyMove = (row, col) => {
+        if(board[row][col] == ""){
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
+
+    const addMark = (row, col, player) => {
+        if(!verifyMove(row, col)){
+            console.log("Marker already in this cell");
+            return;
+        }
+        board[row][col] = player.marker;
         turns++;
-        if(checkWin(row, col, player)){
-            win(player);
+        displayBoard();
+        if(checkWin(row, col)){
+            win(player.name);
         }
         else if(turns == 9){
             gameOver();
         }
+
+        
+    };
+
+    const resetBoard = () =>{
+        turns = 0;
+        for(let row = 0; row <= 2; row++){
+            for(let col = 0; col <= 2; col++){
+                board[row][col] = "";
+            }
+        }
     };
 
     return{
-        addMark
+        addMark,
+        resetBoard
     };
 })();
+
+function Player(name, marker){
+    return{
+        name,
+        marker,
+    }
+}
+
+const player1 = Player("John", "X");
+const player2 = Player("Jane", "O");
+
+gameboard.addMark(0, 0, player1);
+gameboard.addMark(0, 2, player1);
+gameboard.addMark(1, 2, player1);
+gameboard.addMark(2, 0, player1);
+gameboard.addMark(2, 1, player1);
+gameboard.addMark(2, 1, player1);
+
+gameboard.addMark(0, 1, player2);
+gameboard.addMark(1, 1, player2);
+gameboard.addMark(1, 0, player2);
+gameboard.addMark(2, 2, player2);
+
+gameboard.resetBoard();
