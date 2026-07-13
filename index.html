@@ -22,8 +22,21 @@
         <div class="cell 2 1" onclick="cellClicked(event)"></div>
         <div class="cell 2 2" onclick="cellClicked(event)"></div>
     </div>
-    <button onclick="gameboard.resetBoard(DisplayController)">Reset</button>
+    <button onclick="gameboard.resetBoard(DisplayController)">Reset</button> <br>
 
+    <div class="player-names">
+        <div class="player-1">
+            <h2> Player 1 </h2>
+            <label for="player-1-name"> Name </label>
+            <input id="player-1-name" name="player-1-name" type="text" oninput="changeName(event)" value="John">
+        </div>
+
+        <div class="player-2">
+            <h2> Player 2 </h2>
+            <label for="player-2-name"> Name </label>
+            <input id="player-2-name" name="player-2-name" type="text" oninput="changeName(event)" value="Jane">
+        </div>
+    </div>
     <script src="ticTacToe.js"></script>
 </body>
 </html>

@@ -186,6 +186,17 @@ function cellClicked(event){
     gameboard.addMark(classArr.at(1), classArr.at(2), currPlayer, cell, DisplayController);
 }
 
+function changeName(event){
+    let playerName = event.target;
+
+    if(playerName.parentElement.className == "player-1"){
+        player1.name = playerName.value;
+    }
+    else{
+        player2.name = playerName.value;
+    }
+}
+
 
 
 
