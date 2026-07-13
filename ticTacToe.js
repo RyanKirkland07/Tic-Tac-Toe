@@ -77,7 +77,7 @@ const gameboard = (() => {
         }
     }
 
-    const addMark = (row, col, player) => {
+    const addMark = (row, col, player, DisplayController) => {
         if(!verifyMove(row, col)){
             console.log("Marker already in this cell");
             return;
@@ -85,23 +85,28 @@ const gameboard = (() => {
         board[row][col] = player.marker;
         turns++;
         displayBoard();
+        DisplayController.displayMarker();
         if(checkWin(row, col)){
             win(player.name);
+            DisplayController.displayResult(`The Winner Is ${player.name}!`); 
         }
         else if(turns == 9){
             gameOver();
+            DisplayController.displayResult(`Game Ended In A Draw`); 
         }
 
         
     };
 
-    const resetBoard = () =>{
+    const resetBoard = (DisplayController) =>{
         turns = 0;
         for(let row = 0; row <= 2; row++){
             for(let col = 0; col <= 2; col++){
                 board[row][col] = "";
             }
         }
+
+        DisplayController.resetDisplay;
     };
 
     return{
@@ -117,19 +122,38 @@ function Player(name, marker){
     }
 }
 
+const DisplayController = (() => {
+
+    const displayMarker = (event, player) => {
+        let mark = player.marker;
+        let cell = event.target;
+
+        cell.textContent = mark;
+    }
+
+    const resetDisplay = () => {
+        const cells = document.querySelectorAll(".cell");
+        const resultText = document.querySelector(".result");
+
+        for(cell of cells){
+            cell.textContent = "";
+        }
+
+        resultText.textContent = "";
+    }
+
+    const displayResult = (result) => {
+        const resultText = document.querySelector(".result");
+
+        resultText.textContent = result;
+    }
+
+    return {
+        displayMarker,
+        resetDisplay,
+        displayResult
+    }
+})();
+
 const player1 = Player("John", "X");
 const player2 = Player("Jane", "O");
-
-gameboard.addMark(0, 0, player1);
-gameboard.addMark(0, 2, player1);
-gameboard.addMark(1, 2, player1);
-gameboard.addMark(2, 0, player1);
-gameboard.addMark(2, 1, player1);
-gameboard.addMark(2, 1, player1);
-
-gameboard.addMark(0, 1, player2);
-gameboard.addMark(1, 1, player2);
-gameboard.addMark(1, 0, player2);
-gameboard.addMark(2, 2, player2);
-
-gameboard.resetBoard();
