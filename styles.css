@@ -1,0 +1,12 @@
+.game-board{
+    display: grid;
+    grid-template: repeat(3, 1fr) / repeat(3, 1fr);
+}
+
+.cell{
+    border: 2px solid black;
+    min-height: 150px;
+
+    text-align: center;
+    align-content: center;
+}
