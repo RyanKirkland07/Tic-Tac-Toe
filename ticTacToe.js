@@ -8,7 +8,7 @@ const gameboard = (() => {
     let turns = 0;
 
     const checkRow = (row) => {
-        if(board[row][0] == board[row][1] && board[row][1] == board[row][2]){
+        if(board[row][0] == board[row][1] && board[row][1] == board[row][2] && board[row][0] != ""){
             return true;
         }
         else{
@@ -17,7 +17,7 @@ const gameboard = (() => {
     };
 
     const checkCol = (col) => {
-        if(board[0][col] == board[1][col] && board[1][col] == board[2][col]){
+        if(board[0][col] == board[1][col] && board[1][col] == board[2][col] && board[0][col] != ""){
             return true;
         }
         else{
@@ -29,7 +29,7 @@ const gameboard = (() => {
         if(board[0][0] == board[1][1] && board[1][1] == board[2][2] && board[0][0] != ""){
             return true;
         }
-        if(board[0][2] == board[1][1] && board[2][0] && board[0][2] != ""){
+        if(board[0][2] == board[1][1] && board[2][0] == board[0][2] && board[0][2] != ""){
             return true;
         }
         return false;
@@ -77,7 +77,7 @@ const gameboard = (() => {
         }
     }
 
-    const addMark = (row, col, player, DisplayController) => {
+    const addMark = (row, col, player, cell, DisplayController) => {
         if(!verifyMove(row, col)){
             console.log("Marker already in this cell");
             return;
@@ -85,7 +85,7 @@ const gameboard = (() => {
         board[row][col] = player.marker;
         turns++;
         displayBoard();
-        DisplayController.displayMarker();
+        DisplayController.displayMarker(player, cell);
         if(checkWin(row, col)){
             win(player.name);
             DisplayController.displayResult(`The Winner Is ${player.name}!`); 
@@ -94,6 +94,8 @@ const gameboard = (() => {
             gameOver();
             DisplayController.displayResult(`Game Ended In A Draw`); 
         }
+
+        switchPlayer();
 
         
     };
@@ -106,7 +108,8 @@ const gameboard = (() => {
             }
         }
 
-        DisplayController.resetDisplay;
+        DisplayController.resetDisplay();
+        currPlayer = player1;
     };
 
     return{
@@ -115,18 +118,10 @@ const gameboard = (() => {
     };
 })();
 
-function Player(name, marker){
-    return{
-        name,
-        marker,
-    }
-}
-
 const DisplayController = (() => {
 
-    const displayMarker = (event, player) => {
+    const displayMarker = (player, cell) => {
         let mark = player.marker;
-        let cell = event.target;
 
         cell.textContent = mark;
     }
@@ -155,5 +150,35 @@ const DisplayController = (() => {
     }
 })();
 
+function Player(name, marker){
+    return{
+        name,
+        marker,
+    }
+}
+
 const player1 = Player("John", "X");
 const player2 = Player("Jane", "O");
+let currPlayer = player1;
+
+function switchPlayer(){
+    if(currPlayer === player1){
+        currPlayer = player2;
+    }
+    else{
+        currPlayer = player1;
+    }
+}
+
+function cellClicked(event){
+    let cell = event.target;
+    let classArr = cell.className.split(" ");
+
+    console.log("working");
+
+    gameboard.addMark(classArr.at(1), classArr.at(2), currPlayer, cell, DisplayController);
+}
+
+
+
+
