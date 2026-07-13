@@ -7,6 +7,8 @@ const gameboard = (() => {
 
     let turns = 0;
 
+    let gameFinished = false;
+
     const checkRow = (row) => {
         if(board[row][0] == board[row][1] && board[row][1] == board[row][2] && board[row][0] != ""){
             return true;
@@ -50,11 +52,13 @@ const gameboard = (() => {
     const gameOver = () => {
         console.log("Game Over. No Winners.")
         turns = 0;
+        gameFinished = true;
     };
 
     const win = (winner) => {
         console.log(winner + " is the winner!")
         turns = 0;
+        gameFinished = true;
     };
 
     const displayBoard = () => {
@@ -80,6 +84,10 @@ const gameboard = (() => {
     const addMark = (row, col, player, cell, DisplayController) => {
         if(!verifyMove(row, col)){
             console.log("Marker already in this cell");
+            return;
+        }
+        if(gameFinished){
+            console.log("Game Over. Please Reset.")
             return;
         }
         board[row][col] = player.marker;
@@ -110,6 +118,7 @@ const gameboard = (() => {
 
         DisplayController.resetDisplay();
         currPlayer = player1;
+        gameFinished = false;
     };
 
     return{
@@ -173,8 +182,6 @@ function switchPlayer(){
 function cellClicked(event){
     let cell = event.target;
     let classArr = cell.className.split(" ");
-
-    console.log("working");
 
     gameboard.addMark(classArr.at(1), classArr.at(2), currPlayer, cell, DisplayController);
 }
